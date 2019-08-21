@@ -42,7 +42,6 @@ from .utils import compare_token
 from .utils import hash_token
 from .utils import new_token
 from .utils import random_port
-from scipy.optimize._tstutils import description
 
 # top-level variable for easier mocking in tests
 utcnow = datetime.utcnow
@@ -131,6 +130,7 @@ class Group(Base):
     display_name = Column(Unicode(255), unique=True)
     description = Column(Unicode(500), unique=False, nullable=True)
     image = Column(Unicode(255), unique=False, nullable=False)
+    pvc = Column(Unicode(255), unique=False, nullable=False)
     default_url = Column(Unicode(255), unique=False, nullable=False)
     users = relationship('User', secondary='user_group_map', backref='groups')
     
