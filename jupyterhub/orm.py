@@ -120,7 +120,6 @@ user_group_map = Table(
     Column('group_id', ForeignKey('groups.id', ondelete='CASCADE'), primary_key=True),
 )
 
-
 class Group(Base):
     """User Groups"""
 
@@ -132,8 +131,10 @@ class Group(Base):
     image = Column(Unicode(255), unique=False, nullable=False)
     pvc = Column(Unicode(255), unique=False, nullable=False)
     default_url = Column(Unicode(255), unique=False, nullable=False)
+    cpu_limit = Column(Integer, nullable=True, default=2)
+    memory_limit = Column(Integer, nullable=True, default=4)
+    storage_limit = Column(Integer, nullable=True, default=2)
     users = relationship('User', secondary='user_group_map', backref='groups')
-    
 
     def __repr__(self):
         return "<%s %s (%i users)>" % (
@@ -149,6 +150,31 @@ class Group(Base):
         """
         return db.query(cls).filter(cls.name == name).first()
 
+class DatasetGroupMap(Base):
+    """The basic state of dataset group mapping
+
+    connection and cookie info
+    """
+
+    __tablename__ = 'dataset_group_map'
+    id = Column(Integer, primary_key=True)
+    storage_name = Column(Unicode(255),nullable=False)  
+    container_name = Column(Unicode(255),nullable=False)
+    date_eff = Column(DateTime, default=datetime.utcnow)
+    date_exp = Column(DateTime, default=datetime.utcnow)
+    sas_token = Column(Unicode(512),nullable=False)
+    url = Column(Unicode(1000),nullable=False)
+    group_id = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return "<Server(%s:%s)>" % (self.ip, self.port)
+    
+    @classmethod
+    def find(cls, db, gid):
+        """Find sas token by group_id.
+        Returns None if not found.
+        """
+        return db.query(cls).filter(cls.group_id == gid).all()
 
 class User(Base):
     """The User table
