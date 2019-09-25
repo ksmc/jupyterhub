@@ -7,21 +7,34 @@ require(["jquery", "jhapi"], function($, JHAPI) {
   var base_url = window.jhdata.base_url;
   var user = window.jhdata.user;
   var api = new JHAPI(base_url);
-
+  console.log(base_url);
   $("#stop").click(function() {
-    $("#start")
+    $("#back")
       .attr("disabled", true)
       .attr("title", "Your server is stopping")
       .click(function() {
         return false;
       });
+    $("#start")
+	    .attr("disabled", true)
+	    .attr("title", "Your server is stopping")
+	    .click(function() {
+	      return false;
+	    });
     api.stop_server(user, {
       success: function() {
-        $("#start")
-          .text("Start My Server")
+        $("#back")
+          .text("Return My Server")
           .attr("title", "Start your server")
-          .attr("disabled", false)
-          .off("click");
+          .attr("disabled", true)
+          .click(function() {
+	        return false;
+	      });
+        $("#start")
+	        .text("Start My Server")
+	        .attr("title", "Start your server")
+	        .attr("disabled", false)
+	        .off("click");
         $("#stop").hide();
       }
     });

@@ -49,7 +49,6 @@ class HomeHandler(BaseHandler):
         if user.running:
             # trigger poll_and_notify event in case of a server that died
             await user.spawner.poll_and_notify()
-
         # send the user to /spawn if they aren't running or pending a spawn,
         # to establish that this is an explicit spawn request rather
         # than an implicit one, which can be caused by any link to `/user/:name`
@@ -84,27 +83,28 @@ class SpawnHandler(BaseHandler):
     @web.authenticated
     async def get(self, for_user=None):
         """GET renders form for spawning with user-specified options
-
         or triggers spawn via redirect if there is no form.
         """
         user = current_user = self.get_current_user()
         if for_user is not None and for_user != user.name:
             if not user.admin:
                 raise web.HTTPError(403, "Only admins can spawn on behalf of other users")
-
             user = self.find_user(for_user)
             if user is None:
                 raise web.HTTPError(404, "No such user: %s" % for_user)
-
         if not self.allow_named_servers and user.running:
+            print("get list 0")
             url = user.url
             self.log.debug("User is running: %s", url)
             self.redirect(url)
             return
+#         if user.spawner.use_profile_list:
         if user.spawner.options_form:
+            print("get list 1")
             form = await self._render_form(for_user=user)
             self.finish(form)
         else:
+            print("get list 2")
             # Explicit spawn request: clear _spawn_future
             # which may have been saved to prevent implicit spawns
             # after a failure.

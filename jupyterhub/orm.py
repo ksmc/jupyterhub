@@ -91,14 +91,25 @@ user_group_map = Table('user_group_map', Base.metadata,
 
 class Group(Base):
     """User Groups"""
+
     __tablename__ = 'groups'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Unicode(255), unique=True)
+    display_name = Column(Unicode(255), unique=True)
+    description = Column(Unicode(500), unique=False, nullable=True)
+    image = Column(Unicode(255), unique=False, nullable=False)
+    pvc = Column(Unicode(255), unique=False, nullable=False)
+    default_url = Column(Unicode(255), unique=False, nullable=False)
+    cpu_limit = Column(Integer, nullable=True, default=2)
+    memory_limit = Column(Integer, nullable=True, default=4)
+    storage_limit = Column(Integer, nullable=True, default=2)
     users = relationship('User', secondary='user_group_map', backref='groups')
 
     def __repr__(self):
         return "<%s %s (%i users)>" % (
-            self.__class__.__name__, self.name, len(self.users)
+            self.__class__.__name__,
+            self.name,
+            len(self.users),
         )
 
     @classmethod

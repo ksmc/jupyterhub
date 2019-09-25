@@ -11,12 +11,12 @@
       {% if user.running %}
       <a id="stop" role="button" class="btn btn-lg btn-danger">Stop My Server</a>
       {% endif %}
-      <a id="start" role="button" class="btn btn-lg btn-primary" href="{{ url }}">
-      {% if not user.active %}
-      Start
+      {% if user.active %}
+      <a id="back" role="button" class="btn btn-lg btn-primary" href="{{ url }}">Return My Server</a>
       {% endif %}
-        My Server
-      </a>
+      {% if not user.active %}
+      <a id="start" role="button" class="btn btn-lg btn-primary" href="{{ home }}">Start My Server</a>
+      {% endif %}
     </div>
   </div>
 </div>
