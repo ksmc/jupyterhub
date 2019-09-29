@@ -119,6 +119,29 @@ class Group(Base):
         """
         return db.query(cls).filter(cls.name == name).first()
 
+class DatasetGroupMap(Base):
+    """The basic state of dataset group mapping
+    """
+
+    __tablename__ = 'dataset_group_map'
+    id = Column(Integer, primary_key=True)
+    storage_name = Column(Unicode(255),nullable=False)  
+    container_name = Column(Unicode(255),nullable=False)
+    date_eff = Column(DateTime, default=datetime.utcnow)
+    date_exp = Column(DateTime, default=datetime.utcnow)
+    sas_token = Column(Unicode(512),nullable=False)
+    url = Column(Unicode(1000),nullable=False)
+    group_id = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return "<Server(%s:%s)>" % (self.ip, self.port)
+    
+    @classmethod
+    def find(cls, db, gid):
+        """Find sas token by group_id.
+        Returns None if not found.
+        """
+        return db.query(cls).filter(cls.group_id == gid).all()
 
 class User(Base):
     """The User table
@@ -181,6 +204,10 @@ class User(Base):
     # Authenticators can store their state here:
     # Encryption is handled elsewhere
     encrypted_auth_state = Column(LargeBinary)
+    domain = Column(Unicode(255), nullable=True, unique=False)
+    user_email = Column(Unicode(255), nullable=True, unique=False)
+    agency = Column(Unicode(255), nullable=True, unique=False)
+    user_title = Column(Unicode(255), nullable=True, unique=False)
 
     def __repr__(self):
         return "<{cls}({name} {running}/{total} running)>".format(
