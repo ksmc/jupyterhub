@@ -103,6 +103,7 @@ class Group(Base):
     cpu_limit = Column(Integer, nullable=True, default=2)
     memory_limit = Column(Integer, nullable=True, default=4)
     storage_limit = Column(Integer, nullable=True, default=2)
+    storage_account = Column(Unicode(255), unique=False, nullable=False)
     users = relationship('User', secondary='user_group_map', backref='groups')
 
     def __repr__(self):
