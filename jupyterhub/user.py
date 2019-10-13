@@ -283,7 +283,7 @@ class User:
     def escaped_name(self):
         """My name, escaped for use in URLs, cookies, etc."""
 #         return quote(self.name, safe='@~')
-        print(quote(self.name, safe='/'))
+#         print(quote(self.name, safe='/'))
         return quote(self.name, safe='/')
 
     @property
