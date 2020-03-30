@@ -367,6 +367,7 @@ class User:
         # e.g. for processing GET params
         spawner.handler = handler
         # Passing user_options to the spawner
+        print(options)
         spawner.user_options = options or {}
         # we are starting a new server, make sure it doesn't restore state
         spawner.clear_state()
